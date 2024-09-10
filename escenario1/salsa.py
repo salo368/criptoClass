@@ -3,7 +3,7 @@ from Crypto.Random import get_random_bytes
 
 class Salsa20Cipher:
 
-    def __init__(self, key: bytes):
+    def __init__(self, key: bytes = get_random_bytes(32)):
         # clave de 32 bytes
         self.key = key
 
