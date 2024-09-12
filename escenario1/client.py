@@ -59,7 +59,7 @@ class Client:
         try:
             self.__connect_socket()
             if self.connected:
-                encrypted_message = self.cipher.cifrar(message.encode())
+                encrypted_message = self.cipher.encrypt(message.encode())
                 self.socket.sendall(encrypted_message)
                 print(f"Sent encrypted message to {self.server_ip}:{self.server_port}")
         except Exception as e:
@@ -71,7 +71,7 @@ class Client:
             if self.connected:
                 data = self.socket.recv(1024)
                 if data:
-                    decrypted_message = self.cipher.descifrar(data).decode()
+                    decrypted_message = self.cipher.decrypt(data).decode()
                     print(f"Received message: {decrypted_message}")
                     return decrypted_message
                 else:
@@ -91,5 +91,5 @@ class Client:
                 print(f"Error closing the connection: {e}")
 
 if __name__ == "__main__":
-    client = Client(port=8081, server_ip="10.20.8.60", server_port=8080)
+    client = Client(port=8081, server_ip="192.168.1.13", server_port=8080)
     client.run()

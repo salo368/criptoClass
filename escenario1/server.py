@@ -38,6 +38,7 @@ class Server:
         """Handle communication with a connected client."""
         with conn:
             print(f"Connected by {addr}")
+            self.cipher.generate_new_key()
             conn.sendall(self.cipher.key)
             print("Key sent")
             while True:
@@ -49,12 +50,12 @@ class Server:
                         break  # Client disconnected
 
                     # Decrypt the received message
-                    decrypted_message = self.cipher.descifrar(data).decode()
+                    decrypted_message = self.cipher.decrypt(data).decode()
                     print(f"Received from {addr}: {decrypted_message}")
 
                     # Optionally send a response to the client
                     response = input("Response: ")
-                    encrypted_response = self.cipher.cifrar(response.encode())
+                    encrypted_response = self.cipher.encrypt(response.encode())
                     conn.sendall(encrypted_response)
 
                 except Exception as e:
