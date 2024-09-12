@@ -40,6 +40,7 @@ class Client:
     def __create_socket(self):
         if self.socket is None:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.bind((self.ip, self.port))
             print(f"Socket created for client at {self.ip}:{self.port}")
 
     def __connect_socket(self):
@@ -87,8 +88,7 @@ class Client:
                     print("No data received.")
                     return None
         except Exception as e:
-            print(f"Error receiving message: {e}")
-            return None
+            return (f"Error receiving message: {e}")
 
     def __close_connection(self):
         if self.socket:
