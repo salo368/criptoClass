@@ -31,7 +31,7 @@ class Server:
         """Create and bind the server socket to listen for incoming connections."""
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind((self.ip, self.port))
-        server_socket.listen(5)  # Can handle up to 5 simultaneous connections
+        server_socket.listen(5)
         print(f"Socket created and bound to {self.ip}:{self.port}")
         return server_socket
     
@@ -57,15 +57,28 @@ class Server:
                     if not data:
                         print(f"Client {addr} disconnected.")
                         break  # Client disconnected
+                    
+                    # if no response send an OK 
+                    no_response = False
+                    if data.startswith(b"NORESPONSE"):
+                        data = data[len(b"NORESPONSE"):]
+                        no_response = True 
 
                     # Decrypt the received message
-                    decrypted_message = self.cipher.descifrar(data).decode()
-                    print(f"Received from {addr}: {decrypted_message}")
-
-                    # Optionally send a response to the client
-                    response = input("Response: ")
-                    encrypted_response = self.cipher.cifrar(response.encode())
-                    conn.sendall(encrypted_response)
+                    try:
+                        decrypted_message = self.cipher.descifrar(data).decode()
+                    except ValueError as e:
+                        print(f"Error on Decryption: {e}")
+                        conn.sendall(str(e).encode())
+                    else:
+                        # Send a response to the client
+                        print(f"Received from {addr}: {decrypted_message}")
+                        if no_response:
+                            conn.sendall(b"OK")
+                        else:
+                            response = input("Response: ")
+                            encrypted_response = self.cipher.cifrar(response.encode())
+                            conn.sendall(encrypted_response)
 
                 except Exception as e:
                     print(f"Error handling client {addr}: {e}")

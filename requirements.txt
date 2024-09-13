@@ -1,2 +1,3 @@
 pycryptodome==3.20.0
 pyshark==0.6
+padding_oracle==0.4.1
