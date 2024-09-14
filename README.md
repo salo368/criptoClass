@@ -1,10 +1,15 @@
 Este repositorio incluye dos escenarios de comunicación cliente-servidor, donde se utiliza cifrado en las interacciones.
 
-1. **Configurar el servidor (`server.py`)**:
+1. **Generar una llave (`write_key.py`)**:
+   - Este paso es exclusivo del escenario 2 
+
+2. **Configurar y ejecutar el servidor (`server.py`)**:
    - Especifica el puerto en el que el servidor estará escuchando.
 
-2. **Configurar el cliente (`client.py`)**:
+3. **Configurar y ejecutar el cliente (`client.py`)**:
    - Especifica el puerto propio del cliente.
    - Define el puerto e IP del servidor al que se conectará.
 
-Se ejecutan en ese mismo orden.
+4. **Comunicarse**:
+   - Inicialmente el cliente envia y el servidor escucha.
+   - Sus papeles se invierten despues de cada envio.
