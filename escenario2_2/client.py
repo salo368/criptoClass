@@ -101,5 +101,5 @@ class Client:
                 print(f"Error closing the connection: {e}")
 
 if __name__ == "__main__":
-    client = Client(port=8082, server_ip="192.168.1.11", server_port=8080)
+    client = Client(port=8082, server_ip="192.168.1.10", server_port=8081)
     client.run()
