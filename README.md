@@ -1,7 +1,4 @@
-Este repositorio incluye dos escenarios de comunicación cliente-servidor, donde se utiliza cifrado en las interacciones.
-
-1. **Generar una llave (`write_key.py`)**:
-   - Este paso es exclusivo del escenario 2 
+Este repositorio incluye escenarios de comunicación cliente-servidor, donde se utiliza cifrado en las interacciones.
 
 2. **Configurar y ejecutar el servidor (`server.py`)**:
    - Especifica el puerto en el que el servidor estará escuchando.
