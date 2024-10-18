@@ -10,7 +10,7 @@ def get_ip():
     try:
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
-    except Exception as e:
+    except Exception:
         ip = "127.0.0.1"
     finally:
         s.close()
@@ -19,8 +19,7 @@ def get_ip():
 def run_server():
     server_ip = get_ip()
     server_port = 8080
-    salsa20_cipher = None
-    aes_cipher = None
+
     rsa_cipher = RSA_OAEPCipher()
     elgamal_cipher = elGamalCipher()
 
@@ -29,14 +28,15 @@ def run_server():
         server_socket.listen(1)
         print(f"Servidor escuchando en {server_ip}:{server_port}")
 
-        algo = 0  # Comienza con el primer algoritmo
-
         while True:
             conn, addr = server_socket.accept()
             with conn:
                 print(f"Conexión desde {addr}")
 
-                # Enviar la clave según el algoritmo actual
+                data = conn.recv(4)
+                algo = int.from_bytes(data, byteorder='big')
+
+            
                 if algo == 0:
                     salsa20_cipher = Salsa20Cipher()
                     key = salsa20_cipher.key
@@ -53,11 +53,9 @@ def run_server():
                     conn.sendall(key)
 
                 for _ in range(5):
+                    
                     data = conn.recv(8192)
-                    if not data:
-                        break
 
-                    # Procesar el mensaje cifrado
                     if algo == 0:
                         desc = salsa20_cipher.decrypt(data)
                     elif algo == 1:
@@ -66,15 +64,10 @@ def run_server():
                         desc = rsa_cipher.decrypt(data)
                     elif algo == 3:
                         desc = elgamal_cipher.decrypt(data)
-                    
-                    conn.sendall(b"Mensaje recibido")
-                    #print(desc)
 
-                # Esperar un mensaje de control para cambiar el algoritmo
-                control_msg = conn.recv(1024).decode()
-                if control_msg.startswith("FIN_ALG"):
-                    algo += 1  # Incrementar el índice del algoritmo para la siguiente conexión
-                    print(f"Cambiando a algoritmo {algo}")
+                    conn.sendall(b"Mensaje recibido")
+
+                
 
 if __name__ == "__main__":
     run_server()
