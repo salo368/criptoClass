@@ -78,7 +78,7 @@ def run_client(message_lenght):
     return avg_times
 
 
-tamanos = np.linspace(1, 4000, 100, dtype=int)
+tamanos = np.linspace(1, 4000, 20, dtype=int)
 tiempos_salsa = []
 tiempos_aes = []
 tiempos_rsa = []
