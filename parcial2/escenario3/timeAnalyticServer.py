@@ -9,12 +9,12 @@ def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
+        ip_address = s.getsockname()[0]
     except Exception:
-        ip = "127.0.0.1"
+        ip_address = "127.0.0.1"
     finally:
         s.close()
-    return ip
+    return ip_address
 
 def run_server():
     server_ip = get_ip()
@@ -26,17 +26,16 @@ def run_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind((server_ip, server_port))
         server_socket.listen(1)
-        print(f"Servidor escuchando en {server_ip}:{server_port}")
+        print(f"Server listening on {server_ip}:{server_port}")
 
         while True:
             conn, addr = server_socket.accept()
             with conn:
-                print(f"Conexión desde {addr}")
+                print(f"Connection from {addr}")
 
                 data = conn.recv(4)
                 algo = int.from_bytes(data, byteorder='big')
 
-            
                 if algo == 0:
                     salsa20_cipher = Salsa20Cipher()
                     key = salsa20_cipher.key
@@ -53,21 +52,18 @@ def run_server():
                     conn.sendall(key)
 
                 for _ in range(5):
-                    
                     data = conn.recv(8192)
 
                     if algo == 0:
-                        desc = salsa20_cipher.decrypt(data)
+                        decrypted_message = salsa20_cipher.decrypt(data)
                     elif algo == 1:
-                        desc = aes_cipher.decrypt(data)
+                        decrypted_message = aes_cipher.decrypt(data)
                     elif algo == 2:
-                        desc = rsa_cipher.decrypt(data)
+                        decrypted_message = rsa_cipher.decrypt(data)
                     elif algo == 3:
-                        desc = elgamal_cipher.decrypt(data)
+                        decrypted_message = elgamal_cipher.decrypt(data)
 
-                    conn.sendall(b"Mensaje recibido")
-
-                
+                    conn.sendall(b"Message received")
 
 if __name__ == "__main__":
     run_server()

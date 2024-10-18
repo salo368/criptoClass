@@ -78,32 +78,29 @@ def run_client(message_lenght):
     return avg_times
 
 
-tamanos = np.linspace(1, 4000, 20, dtype=int)
-tiempos_salsa = []
-tiempos_aes = []
-tiempos_rsa = []
-tiempos_elgamal = []
+sizes = np.linspace(1, 4000, 20, dtype=int)
+salsa_times = []
+aes_times = []
+rsa_times = []
+elgamal_times = []
 
-
-for tamano in tamanos:
-    print(f'Para {tamano} bytes')
-    tiempos = run_client(tamano)
-    tiempos_salsa.append(tiempos[0])
-    tiempos_aes.append(tiempos[1])
-    tiempos_rsa.append(tiempos[2])
-    tiempos_elgamal.append(tiempos[3])
-
+for size in sizes:
+    print(f'For {size} bytes')
+    times = run_client(size)
+    salsa_times.append(times[0])
+    aes_times.append(times[1])
+    rsa_times.append(times[2])
+    elgamal_times.append(times[3])
 
 plt.figure(figsize=(10, 6))
-plt.plot(tamanos, tiempos_salsa, label='Salsa', color='blue')
-plt.plot(tamanos, tiempos_aes, label='AES', color='green')
-plt.plot(tamanos, tiempos_rsa, label='RSA', color='red')
-plt.plot(tamanos, tiempos_elgamal, label='ElGamal', color='orange')
+plt.plot(sizes, salsa_times, label='Salsa', color='blue')
+plt.plot(sizes, aes_times, label='AES', color='green')
+plt.plot(sizes, rsa_times, label='RSA', color='red')
+plt.plot(sizes, elgamal_times, label='ElGamal', color='orange')
 
-
-plt.title('Tiempo de Ejecución por Tamaño de Mensaje')
-plt.xlabel('Tamaño del Mensaje en Bytes')
-plt.ylabel('Tiempo de Ejecución (s)')
+plt.title('Execution Time by Message Size')
+plt.xlabel('Message Size in Bytes')
+plt.ylabel('Execution Time (s)')
 plt.legend()
 plt.grid()
 
